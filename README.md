@@ -161,13 +161,14 @@ nohup python -u train.py $BINARY_DATA_DIR --memory-efficient-fp16 \
 ```
 
 # Generate with valid subset
+```
 OUTFILENAME=$DATA_DIR/flipkart_questions_50k_mbart_0.85_mlm0.15_qs_sep_grammar_corrected_beam1_best_gformer_best_of_three_lr_0.00005_2_600.valid
 fairseq-generate $BINARY_DATA_DIR --batch-size 32 --path $MODEL_DIR/checkpoint_2_600.pt  --remove-bpe  --gen-subset valid \
 --beam 5 --source-lang en --target-lang hi --task translation >  $OUTFILENAME.txt
 
 cat $OUTFILENAME.txt |grep ^H | sort -nr -k1.2 | cut -f3- | $MOSES_DIR/scripts/tokenizer/detokenizer.perl > $OUTFILENAME.hi 
 cat $OUTFILENAME.hi | sacrebleu $DATA_DIR/valid.hi  -m bleu ter
-
+```
 Use DATA_FOLDER_NAME=flipkart_questions_50k_new and --finetune-from-model ../models/samanantar.noise/checkpoint15.pt for fine-tuning with robust baseline
 
 For GUDA, Refer to https://github.com/trangvu/guda
